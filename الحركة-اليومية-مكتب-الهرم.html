@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تقويم عائلة كزبري</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@500;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F1ECDD;
+    --panel:#FBF8EF;
+    --ink:#23302A;
+    --ink-soft:#5B6960;
+    --green:#4F7A5B;
+    --green-dark:#33503C;
+    --gold:#C08A2E;
+    --clay:#B5533C;
+    --line:#DAD0B4;
+    --line-soft:#E7DFC7;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1100px 500px at 85% -10%, rgba(79,122,91,0.08), transparent 60%),
+      var(--bg);
+    color:var(--ink);
+    font-family:'Tajawal', sans-serif;
+    min-height:100vh;
+    padding:28px 16px 64px;
+  }
+  .wrap{max-width:920px;margin:0 auto;}
+
+  /* ---------- Header ---------- */
+  header{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:20px;
+    padding-bottom:18px;
+    margin-bottom:22px;
+    border-bottom:2px solid var(--green-dark);
+  }
+  .title-block{display:flex;align-items:center;gap:14px;}
+  .sprig{width:44px;height:44px;flex:none;}
+  h1{
+    font-family:'El Messiri', serif;
+    font-weight:700;
+    font-size:clamp(26px,4vw,36px);
+    margin:0;
+    line-height:1.15;
+    outline:none;
+    cursor:text;
+    border-bottom:1px dashed transparent;
+  }
+  h1:hover, h1:focus{border-bottom:1px dashed var(--gold);}
+  .subtitle{
+    font-size:13px;
+    color:var(--ink-soft);
+    margin-top:4px;
+  }
+  .sync-ok{color:var(--green)!important}.sync-warn{color:var(--clay)!important}
+  .year-nav{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:'El Messiri', serif;
+    font-size:22px;
+    font-weight:600;
+    color:var(--green-dark);
+    flex:none;
+  }
+  .year-nav button{
+    width:30px;height:30px;
+    border:1px solid var(--line);
+    background:var(--panel);
+    border-radius:50%;
+    color:var(--green-dark);
+    font-size:15px;
+    cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    transition:background .15s ease, border-color .15s ease;
+  }
+  .year-nav button:hover{background:var(--green);color:#fff;border-color:var(--green);}
+
+  /* ---------- Layout ---------- */
+  .layout{
+    display:grid;
+    grid-template-columns:1fr 280px;
+    gap:28px;
+    align-items:start;
+  }
+  @media (max-width:760px){
+    .layout{grid-template-columns:1fr;}
+  }
+
+  /* ---------- Calendar card ---------- */
+  .cal-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+  }
+  .cal-toolbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:16px 18px;
+    border-bottom:1px solid var(--line);
+  }
+  .month-title{
+    font-family:'El Messiri', serif;
+    font-weight:600;
+    font-size:22px;
+    color:var(--ink);
+    min-width:140px;
+    text-align:center;
+  }
+  .cal-toolbar .nav-btn{
+    width:32px;height:32px;
+    border:1px solid var(--line);
+    background:transparent;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:15px;
+    color:var(--ink-soft);
+    transition:background .15s ease,color .15s ease;
+  }
+  .cal-toolbar .nav-btn:hover{background:var(--green);color:#fff;border-color:var(--green);}
+  .today-btn{
+    border:1px solid var(--gold);
+    color:var(--gold);
+    background:transparent;
+    padding:6px 14px;
+    border-radius:6px;
+    font-family:'Tajawal',sans-serif;
+    font-size:13px;
+    cursor:pointer;
+    transition:background .15s ease,color .15s ease;
+  }
+  .today-btn:hover{background:var(--gold);color:#fff;}
+
+  .weekday-row{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    border-bottom:1px solid var(--line);
+  }
+  .weekday-row div{
+    text-align:center;
+    font-size:12px;
+    color:var(--ink-soft);
+    padding:10px 0;
+    font-weight:700;
+  }
+
+  .days-grid{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    grid-auto-rows:88px;
+  }
+  .day-cell{
+    border-left:1px solid var(--line-soft);
+    border-bottom:1px solid var(--line-soft);
+    padding:6px 8px;
+    position:relative;
+    cursor:pointer;
+    transition:background .15s ease;
+  }
+  .days-grid .day-cell:nth-child(7n){border-left:none;}
+  .day-cell:hover{background:rgba(79,122,91,0.07);}
+  .day-cell.empty{cursor:default;}
+  .day-cell.empty:hover{background:transparent;}
+  .day-num{
+    font-size:14px;
+    font-weight:500;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:24px;height:24px;
+    border-radius:50%;
+  }
+  .day-cell.today .day-num{
+    background:var(--clay);
+    color:#fff;
+    font-weight:700;
+  }
+  .event-list-mini{
+    margin-top:5px;
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+  }
+  .event-chip{
+    font-size:10.5px;
+    background:rgba(79,122,91,0.14);
+    color:var(--green-dark);
+    border-right:2px solid var(--green);
+    padding:1px 5px;
+    border-radius:2px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .event-chip.more{
+    background:transparent;
+    border:none;
+    color:var(--ink-soft);
+    padding:0 5px;
+  }
+  .log-chip{
+    font-size:10.5px;
+    background:rgba(181,83,60,0.13);
+    color:var(--clay);
+    border-right:2px solid var(--clay);
+    padding:1px 5px;
+    border-radius:2px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .day-cell.has-log{ box-shadow: inset 0 0 0 1px rgba(181,83,60,0.25); }
+
+  .fade{animation:fadeIn .25s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(3px);}to{opacity:1;transform:none;}}
+
+  /* ---------- Sidebar ---------- */
+  .side-col{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+  }
+  .side-card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    padding:18px;
+  }
+  .side-card h2{
+    font-family:'El Messiri',serif;
+    font-size:17px;
+    margin:0 0 4px;
+    color:var(--green-dark);
+  }
+  .side-card .hint{
+    font-size:11.5px;
+    color:var(--ink-soft);
+    margin:0 0 14px;
+  }
+
+  /* ---------- Today transactions summary (compact) ---------- */
+  .tx-date{
+    font-size:11.5px;
+    color:var(--ink-soft);
+    margin:0 0 14px;
+  }
+  .tx-stats{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    margin-bottom:10px;
+  }
+  .tx-stat{
+    background:#fff;
+    border:1px solid var(--line-soft);
+    border-radius:6px;
+    padding:10px;
+    text-align:center;
+  }
+  .tx-stat.in{border-top:3px solid var(--green);}
+  .tx-stat.out{border-top:3px solid var(--clay);}
+  .tx-stat .ts-label{
+    display:block;
+    font-size:11px;
+    color:var(--ink-soft);
+    margin-bottom:4px;
+  }
+  .tx-stat .ts-value{
+    font-family:'El Messiri',serif;
+    font-weight:700;
+    font-size:18px;
+    color:var(--green-dark);
+  }
+  .tx-stat.out .ts-value{color:var(--clay);}
+  .tx-net{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:rgba(79,122,91,0.08);
+    border-radius:6px;
+    padding:9px 12px;
+    margin-bottom:10px;
+  }
+  .tx-net .tn-label{
+    font-size:12px;
+    color:var(--ink-soft);
+    font-weight:700;
+  }
+  .tx-net .tn-value{
+    font-family:'El Messiri',serif;
+    font-weight:700;
+    font-size:16px;
+    color:var(--green-dark);
+  }
+  .tx-net .tn-value.negative{color:var(--clay);}
+  .tx-count{
+    font-size:11.5px;
+    color:var(--ink-soft);
+    text-align:center;
+    margin:0 0 14px;
+  }
+  .tx-add-btn{
+    display:block;
+    width:100%;
+    background:var(--green);
+    color:#fff;
+    border:none;
+    padding:9px 12px;
+    border-radius:5px;
+    font-family:'Tajawal',sans-serif;
+    font-weight:700;
+    font-size:13px;
+    cursor:pointer;
+    transition:background .15s ease;
+  }
+  .tx-add-btn:hover{background:var(--green-dark);}
+
+  .del-btn{
+    background:none;
+    border:none;
+    color:var(--ink-soft);
+    cursor:pointer;
+    font-size:14px;
+    line-height:1;
+    padding:2px;
+  }
+  .del-btn:hover{color:var(--clay);}
+  .empty-state{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    text-align:center;
+    padding:10px 0;
+  }
+
+  footer{
+    text-align:center;
+    font-size:11px;
+    color:var(--ink-soft);
+    margin-top:26px;
+  }
+
+  /* ---------- Search box ---------- */
+  .search-row{
+    position:relative;
+    padding:12px 18px;
+    border-bottom:1px solid var(--line);
+    background:var(--panel);
+  }
+  .search-row input{
+    width:100%;
+    font-family:'Tajawal',sans-serif;
+    font-size:13.5px;
+    padding:9px 34px 9px 12px;
+    border:1px solid var(--line);
+    border-radius:6px;
+    background:#fff;
+    color:var(--ink);
+  }
+  .search-row input:focus{outline:2px solid var(--green);outline-offset:1px;}
+  .search-row .search-icon{
+    position:absolute;
+    left:30px;
+    top:50%;
+    transform:translateY(-50%);
+    color:var(--ink-soft);
+    font-size:14px;
+    pointer-events:none;
+  }
+  .search-results{
+    position:absolute;
+    top:100%;
+    right:18px; left:18px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-top:none;
+    max-height:280px;
+    overflow-y:auto;
+    z-index:30;
+    box-shadow:0 8px 18px rgba(35,48,42,0.12);
+    display:none;
+  }
+  .search-results.open{display:block;}
+  .search-results .sr-item{
+    display:flex;
+    align-items:flex-start;
+    gap:8px;
+    padding:9px 12px;
+    cursor:pointer;
+    border-bottom:1px solid var(--line-soft);
+    font-size:12.5px;
+  }
+  .search-results .sr-item:last-child{border-bottom:none;}
+  .search-results .sr-item:hover{background:rgba(79,122,91,0.08);}
+  .search-results .sr-date{
+    font-family:'El Messiri',serif;
+    font-weight:600;
+    color:var(--gold);
+    min-width:70px;
+    flex:none;
+  }
+  .search-results .sr-badge{
+    font-size:10px;
+    padding:1px 6px;
+    border-radius:3px;
+    flex:none;
+    align-self:center;
+  }
+  .search-results .sr-badge.ev{ background:rgba(79,122,91,0.15); color:var(--green-dark); }
+  .search-results .sr-badge.log{ background:rgba(181,83,60,0.15); color:var(--clay); }
+  .search-results .sr-text{flex:1; color:var(--ink);}
+  .search-results .sr-empty{
+    padding:12px;
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:12.5px;
+  }
+
+  /* ---------- Log modal ---------- */
+  .modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(35,48,42,0.45);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:100;
+    padding:16px;
+  }
+  .modal-overlay.open{display:flex;}
+  .log-modal{
+    background:var(--panel);
+    border:1px solid var(--line);
+    width:100%;
+    max-width:420px;
+    max-height:88vh;
+    overflow-y:auto;
+    padding:20px 22px;
+    animation:fadeIn .2s ease;
+  }
+  .log-modal-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:4px;
+  }
+  .log-modal-head h3{
+    font-family:'El Messiri',serif;
+    font-size:19px;
+    color:var(--green-dark);
+    margin:0;
+  }
+  .log-modal-close{
+    background:none;
+    border:none;
+    font-size:18px;
+    color:var(--ink-soft);
+    cursor:pointer;
+    line-height:1;
+    padding:4px;
+  }
+  .log-modal-close:hover{color:var(--clay);}
+  .log-modal-sub{
+    font-size:11.5px;
+    color:var(--ink-soft);
+    margin:0 0 16px;
+  }
+  #log-entries-list{
+    list-style:none;
+    margin:0 0 16px;
+    padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    max-height:180px;
+    overflow-y:auto;
+  }
+  #log-entries-list li{
+    display:flex;
+    align-items:flex-start;
+    gap:8px;
+    background:#fff;
+    border:1px solid var(--line-soft);
+    border-right:3px solid var(--clay);
+    border-radius:4px;
+    padding:8px 10px;
+    font-size:12.5px;
+  }
+  #log-entries-list .le-body{flex:1;}
+  #log-entries-list .le-type{
+    display:block;
+    font-weight:700;
+    color:var(--clay);
+    font-size:11.5px;
+    margin-bottom:2px;
+  }
+  #log-entries-list .le-time{
+    color:var(--ink-soft);
+    font-size:10.5px;
+    margin-inline-start:6px;
+    font-weight:400;
+  }
+  #log-entries-list .le-note{color:var(--ink);}
+  #log-form{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    padding-top:14px;
+    border-top:1px dashed var(--line);
+  }
+  #log-form select,
+  #log-form input[type=text],
+  #log-form input[type=time]{
+    font-family:'Tajawal',sans-serif;
+    font-size:13px;
+    padding:8px 10px;
+    border:1px solid var(--line);
+    border-radius:5px;
+    background:#fff;
+    color:var(--ink);
+    width:100%;
+  }
+  #log-form .row2{display:flex; gap:8px;}
+  #log-form .row2 select{flex:1;}
+  #log-form .row2 input[type=time]{width:110px; flex:none;}
+  #log-form input:focus, #log-form select:focus{outline:2px solid var(--clay);outline-offset:1px;}
+  #log-form button{
+    background:var(--clay);
+    color:#fff;
+    border:none;
+    padding:9px 12px;
+    border-radius:5px;
+    font-family:'Tajawal',sans-serif;
+    font-weight:700;
+    font-size:13px;
+    cursor:pointer;
+    transition:background .15s ease;
+  }
+  #log-form button:hover{background:#93412e;}
+  .log-modal-link{
+    display:inline-block;
+    margin-top:12px;
+    font-size:11.5px;
+    color:var(--green-dark);
+    text-decoration:underline;
+    cursor:pointer;
+    background:none;
+    border:none;
+    padding:0;
+    font-family:'Tajawal',sans-serif;
+  }
+  .day-cell.flash{ animation:flashCell 1.1s ease; }
+  @keyframes flashCell{
+    0%,100%{background:transparent;}
+    30%{background:rgba(192,138,46,0.35);}
+  }
+
+  /* ---------- Journal (دفتر اليومية) ---------- */
+  .journal-total{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:#fff;
+    border:1px solid var(--line);
+    border-right:3px solid var(--clay);
+    border-radius:5px;
+    padding:10px 12px;
+    margin-bottom:14px;
+  }
+  .journal-total .jt-label{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    font-weight:700;
+  }
+  .journal-total .jt-value{
+    font-family:'El Messiri',serif;
+    font-size:19px;
+    font-weight:700;
+    color:var(--green-dark);
+  }
+  .journal-total .jt-value.negative{ color:var(--clay); }
+  .journal-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px;}
+  .journal-stat{background:#fff;border:1px solid var(--line-soft);border-radius:5px;padding:8px 6px;text-align:center;}
+  .journal-stat.in{border-top:3px solid var(--green);}
+  .journal-stat.out{border-top:3px solid var(--clay);}
+  .journal-stat.net{border-top:3px solid var(--gold);}
+  .journal-stat .js-label{display:block;font-size:10px;color:var(--ink-soft);margin-bottom:3px;font-weight:700;}
+  .journal-stat .js-value{font-family:'El Messiri',serif;font-size:15px;font-weight:700;color:var(--green-dark);}
+  .journal-stat.out .js-value{color:var(--clay);}
+  .journal-stat.net .js-value.negative{color:var(--clay);}
+  .journal-actions{display:flex;gap:4px;align-items:center;flex:none;}
+  .edit-btn,.del-btn{width:27px;height:27px;border:1px solid var(--line);border-radius:5px;background:#fff;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;transition:.15s;}
+  .edit-btn{color:var(--green-dark);}
+  .edit-btn:hover{background:var(--green);color:#fff;border-color:var(--green);}
+  .del-btn{color:var(--ink-soft);}
+  .del-btn:hover{color:#fff;background:var(--clay);border-color:var(--clay);}
+  .form-actions{display:flex;gap:8px;}
+  .form-actions button{flex:1;}
+  #log-cancel-edit{display:none;background:#fff;color:var(--ink);border:1px solid var(--line);}
+  #log-cancel-edit:hover{background:var(--line-soft);}
+  .editing-badge{display:none;font-size:10px;color:var(--gold);font-weight:700;background:rgba(192,138,46,.12);padding:3px 7px;border-radius:4px;margin-inline-start:6px;}
+  .is-editing .editing-badge{display:inline-block;}
+  .is-editing #log-submit{background:var(--green);}
+  .is-editing #log-cancel-edit{display:block;}
+
+  #journal-list{
+    list-style:none;
+    margin:0;padding:0;
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+    max-height:360px;
+    overflow-y:auto;
+  }
+  #journal-list li{
+    display:flex;
+    align-items:flex-start;
+    gap:8px;
+    font-size:12.5px;
+    line-height:1.45;
+    border-bottom:1px dashed var(--line-soft);
+    padding-bottom:8px;
+  }
+  #journal-list li:last-child{border-bottom:none; padding-bottom:0;}
+  #journal-list .jl-main{flex:1;}
+  #journal-list .jl-date{
+    font-family:'El Messiri',serif;
+    font-weight:600;
+    color:var(--gold);
+    font-size:11.5px;
+    display:block;
+  }
+  #journal-list .jl-type{
+    font-size:10px;
+    color:var(--clay);
+    font-weight:700;
+    display:inline-block;
+    margin-top:1px;
+  }
+  #journal-list .jl-note{
+    display:block;
+    color:var(--ink);
+    margin-top:1px;
+  }
+  #journal-list .jl-amount{
+    font-family:'El Messiri',serif;
+    font-weight:700;
+    font-size:13px;
+    color:var(--green-dark);
+    flex:none;
+    white-space:nowrap;
+  }
+  #journal-list .jl-amount.negative{ color:var(--clay); }
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="title-block">
+      <svg class="sprig" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M24 44V14" stroke="#4F7A5B" stroke-width="2" stroke-linecap="round"/>
+        <path d="M24 20c-6-2-9-8-8-14 6 1 10 6 8 14z" fill="#C08A2E" opacity="0.85"/>
+        <path d="M24 26c6-2 9-8 8-14-6 1-10 6-8 14z" fill="#4F7A5B"/>
+        <path d="M24 32c-5-1-8-6-7-11 5 1 8 5 7 11z" fill="#C08A2E" opacity="0.85"/>
+        <path d="M24 38c5-1 8-6 7-11-5 1-8 5-7 11z" fill="#4F7A5B"/>
+      </svg>
+      <div>
+        <h1 id="cal-title" contenteditable="true" spellcheck="false">تقويم عائلة كزبري</h1>
+        <div class="subtitle">اضغط على العنوان لتغييره · اضغط على أي يوم لتسجيل حركة <span id="sync-status" style="margin-inline-start:8px;font-weight:700;color:var(--ink-soft)">جاري الاتصال بالحفظ السحابي…</span></div>
+      </div>
+    </div>
+    <div class="year-nav">
+      <button id="year-prev" aria-label="السنة السابقة">‹</button>
+      <span id="year-label">2026</span>
+      <button id="year-next" aria-label="السنة التالية">›</button>
+    </div>
+  </header>
+
+  <div class="layout">
+
+    <section class="cal-card">
+      <div class="cal-toolbar">
+        <button class="nav-btn" id="month-prev" aria-label="الشهر السابق">›</button>
+        <div class="month-title" id="month-title">يناير</div>
+        <button class="nav-btn" id="month-next" aria-label="الشهر التالي">‹</button>
+        <button class="today-btn" id="today-btn">اليوم</button>
+      </div>
+      <div class="search-row">
+        <input type="text" id="search-box" placeholder="بحث عن مناسبة أو حركة… (مثال: استلام، اسم العميل، شهر)" autocomplete="off">
+        <span class="search-icon">🔎</span>
+        <div class="search-results" id="search-results"></div>
+      </div>
+      <div class="weekday-row">
+        <div>الأحد</div><div>الاثنين</div><div>الثلاثاء</div><div>الأربعاء</div>
+        <div>الخميس</div><div>الجمعة</div><div>السبت</div>
+      </div>
+      <div class="days-grid" id="days-grid"></div>
+    </section>
+
+    <aside class="side-col">
+      <div class="side-card">
+        <h2>معاملات اليوم</h2>
+        <p class="tx-date" id="tx-today-date">—</p>
+
+        <div class="tx-stats">
+          <div class="tx-stat in">
+            <span class="ts-label">قبض</span>
+            <span class="ts-value" id="tx-today-in">0</span>
+          </div>
+          <div class="tx-stat out">
+            <span class="ts-label">صرف</span>
+            <span class="ts-value" id="tx-today-out">0</span>
+          </div>
+        </div>
+
+        <div class="tx-net">
+          <span class="tn-label">صافي اليوم</span>
+          <span class="tn-value" id="tx-today-net">0</span>
+        </div>
+
+        <p class="tx-count" id="tx-today-count">لا توجد حركات مسجلة اليوم</p>
+
+        <button type="button" class="tx-add-btn" id="tx-add-today-btn">+ تسجيل حركة اليوم</button>
+      </div>
+
+      <div class="side-card">
+        <h2>دفتر اليومية</h2>
+        <p class="hint">سجل مختصر لكل الحركات مع حساب الإجمالي</p>
+
+        <div class="journal-summary">
+          <div class="journal-stat in"><span class="js-label">إجمالي الوارد</span><span class="js-value" id="journal-in-total">0</span></div>
+          <div class="journal-stat out"><span class="js-label">إجمالي الصادر</span><span class="js-value" id="journal-out-total">0</span></div>
+          <div class="journal-stat net"><span class="js-label">الصافي</span><span class="js-value" id="journal-net-total">0</span></div>
+        </div>
+        <div class="journal-total" id="journal-total">
+          <span class="jt-label">عدد الحركات</span>
+          <span class="jt-value" id="journal-total-value">0</span>
+        </div>
+
+        <ul id="journal-list"></ul>
+      </div>
+    </aside>
+
+  </div>
+
+  <footer>تقويم عائلة كزبري · يُحفظ تلقائيًا في هذا المتصفح</footer>
+</div>
+
+<div class="modal-overlay" id="log-modal-overlay">
+  <div class="log-modal">
+    <div class="log-modal-head">
+      <h3 id="log-modal-date">— <span class="editing-badge">تعديل الحركة</span></h3>
+      <button class="log-modal-close" id="log-modal-close" aria-label="إغلاق">✕</button>
+    </div>
+    <p class="log-modal-sub">سجل هنا أي حركة يومية: استلام شيء من عميل، معاملة تمت، أو أي ملاحظة.</p>
+
+    <ul id="log-entries-list"></ul>
+
+    <form id="log-form">
+      <div class="row2">
+        <select id="log-type">
+          <option value="receive">استلام من عميل</option>
+          <option value="transaction">حركة / معاملة تمت</option>
+          <option value="other">ملاحظة أخرى</option>
+        </select>
+        <input type="time" id="log-time">
+      </div>
+      <div class="row2">
+        <select id="log-direction">
+          <option value="in">قبض (+)</option>
+          <option value="out">صرف (-)</option>
+        </select>
+        <input type="number" id="log-amount" placeholder="القيمة (اختياري)" min="0" step="0.01" inputmode="decimal">
+      </div>
+      <input type="text" id="log-note" placeholder="تفاصيل الحركة (مثال: استلمنا شيك من العميل أحمد)" required maxlength="140">
+      <div class="form-actions"><button type="submit" id="log-submit">تسجيل الحركة</button><button type="button" id="log-cancel-edit">إلغاء التعديل</button></div>
+    </form>
+  </div>
+</div>
+
+<script>
+(function(){
+  const STORAGE_EVENTS = 'kozbariFamilyCalendar.events';
+  const STORAGE_TITLE  = 'kozbariFamilyCalendar.title';
+  const STORAGE_LOGS   = 'kozbariFamilyCalendar.logs';
+
+  // Firebase / Cloud Firestore
+  const FIREBASE_CONFIG = {
+    apiKey: 'AIzaSyAaaKZXMZjlLR4nXNo7WaKDn9IYpenzTfQ',
+    authDomain: 'alharmtravel-07.firebaseapp.com',
+    projectId: 'alharmtravel-07',
+    storageBucket: 'alharmtravel-07.firebasestorage.app',
+    messagingSenderId: '662867358245',
+    appId: '1:662867358245:web:5ed90893ab4bf7ea6dc5cc',
+    measurementId: 'G-BHBR5GXS00'
+  };
+  const CLOUD_COLLECTION = 'kozbariFamilyCalendar';
+  const CLOUD_DOC = 'shared';
+  let cloudReady = false;
+  let applyingCloud = false;
+  let cloudUnsubscribe = null;
+
+  const MONTHS = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+
+  const LOG_TYPES = {
+    receive:     'استلام من عميل',
+    transaction: 'حركة / معاملة تمت',
+    other:       'ملاحظة أخرى'
+  };
+
+  const defaultEvents = [
+    {id:'d1', date:'2026-01-01', title:'يوم رأس السنة الجديدة', recurring:true},
+    {id:'d2', date:'2026-03-25', title:'عيد ميلاد غدي', recurring:true}
+  ];
+
+  function loadEvents(){
+    try{
+      const raw = localStorage.getItem(STORAGE_EVENTS);
+      if(raw) return JSON.parse(raw);
+    }catch(e){}
+    return defaultEvents.slice();
+  }
+  function saveEvents(){
+    try{ localStorage.setItem(STORAGE_EVENTS, JSON.stringify(events)); }catch(e){}
+    cloudSave();
+  }
+
+  function loadLogs(){
+    try{
+      const raw = localStorage.getItem(STORAGE_LOGS);
+      if(raw) return JSON.parse(raw);
+    }catch(e){}
+    return [];
+  }
+  function saveLogs(){
+    try{ localStorage.setItem(STORAGE_LOGS, JSON.stringify(dailyLogs)); }catch(e){}
+    cloudSave();
+  }
+
+  let events = loadEvents();
+  let dailyLogs = loadLogs();
+  let activeModalDate = null;
+  let editingLogId = null;
+  const today = new Date();
+  let viewYear = today.getFullYear();
+  let viewMonth = today.getMonth(); // 0-based
+
+  // ---- title persistence ----
+  const titleEl = document.getElementById('cal-title');
+  try{
+    const savedTitle = localStorage.getItem(STORAGE_TITLE);
+    if(savedTitle) titleEl.textContent = savedTitle;
+  }catch(e){}
+  titleEl.addEventListener('blur', function(){
+    const t = titleEl.textContent.trim() || 'تقويم العائلة';
+    titleEl.textContent = t;
+    try{ localStorage.setItem(STORAGE_TITLE, t); }catch(e){}
+    cloudSave();
+  });
+  titleEl.addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){ e.preventDefault(); titleEl.blur(); }
+  });
+
+  function pad(n){ return n.toString().padStart(2,'0'); }
+  function isoDate(y,m,d){ return `${y}-${pad(m+1)}-${pad(d)}`; }
+
+  function eventsForDay(y, m, d){
+    const mmdd = `${pad(m+1)}-${pad(d)}`;
+    const full = isoDate(y,m,d);
+    return events.filter(ev => {
+      if(ev.recurring) return ev.date.slice(5) === mmdd;
+      return ev.date === full;
+    });
+  }
+
+  function logsForDate(dateStr){
+    return dailyLogs.filter(l => l.date === dateStr)
+                     .sort((a,b)=> (a.time||'').localeCompare(b.time||''));
+  }
+
+  function formatDateLong(dateStr){
+    const [y,m,d] = dateStr.split('-');
+    return `${parseInt(d,10)} ${MONTHS[parseInt(m,10)-1]} ${y}`;
+  }
+
+  // ---------------- Cloud sync ----------------
+  function setSyncStatus(text, ok=false){
+    const el=document.getElementById('sync-status');
+    if(!el) return;
+    el.textContent=text;
+    el.classList.toggle('sync-ok', !!ok);
+    el.classList.toggle('sync-warn', !ok);
+  }
+
+  function cloudRef(){
+    if(!cloudReady || !window.firebase || !firebase.firestore) return null;
+    return firebase.firestore().collection(CLOUD_COLLECTION).doc(CLOUD_DOC);
+  }
+
+  function cloudSave(){
+    const ref=cloudRef();
+    if(!ref || applyingCloud) return;
+    const title=(document.getElementById('cal-title')?.textContent || 'تقويم العائلة').trim();
+    setSyncStatus('جارٍ الحفظ السحابي…');
+    ref.set({
+      events: Array.isArray(events) ? events : [],
+      dailyLogs: Array.isArray(dailyLogs) ? dailyLogs : [],
+      title,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    })
+    .then(()=>setSyncStatus('تم الحفظ والمزامنة ✓',true))
+    .catch(err=>{ console.error('Firestore save error:',err); setSyncStatus('تعذر الحفظ السحابي — البيانات المحلية محفوظة'); });
+  }
+
+  function initCloud(){
+    try{
+      if(!window.firebase || !firebase.firestore){
+        setSyncStatus('خدمة Firebase غير متاحة');
+        return;
+      }
+      if(!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+      cloudReady=true;
+      const ref=cloudRef();
+      cloudUnsubscribe=ref.onSnapshot(snap=>{
+        if(applyingCloud) return;
+        if(!snap.exists){
+          setSyncStatus('تم الاتصال — جارٍ إنشاء الحفظ السحابي…');
+          cloudSave();
+          return;
+        }
+        const data=snap.data() || {};
+        applyingCloud=true;
+        try{
+          if(Array.isArray(data.events)) events=data.events;
+          if(Array.isArray(data.dailyLogs)) dailyLogs=data.dailyLogs;
+          if(typeof data.title==='string' && data.title.trim()) titleEl.textContent=data.title;
+          localStorage.setItem(STORAGE_EVENTS, JSON.stringify(events));
+          localStorage.setItem(STORAGE_LOGS, JSON.stringify(dailyLogs));
+          localStorage.setItem(STORAGE_TITLE, (titleEl.textContent||'تقويم العائلة').trim());
+        }catch(e){}
+        renderCalendar();
+        renderJournal();
+        applyingCloud=false;
+        setSyncStatus('تمت المزامنة تلقائيًا ✓',true);
+      }, err=>{
+        console.error('Firestore listener error:',err);
+        setSyncStatus('تعذر الاتصال — البيانات المحلية محفوظة');
+      });
+    }catch(err){
+      console.error('Firebase init error:',err);
+      setSyncStatus('تعذر تشغيل المزامنة — البيانات المحلية محفوظة');
+    }
+  }
+
+  function renderCalendar(){
+    document.getElementById('year-label').textContent = viewYear;
+    document.getElementById('month-title').textContent = MONTHS[viewMonth];
+
+    const grid = document.getElementById('days-grid');
+    grid.innerHTML = '';
+    grid.classList.remove('fade'); void grid.offsetWidth; grid.classList.add('fade');
+
+    const firstWeekday = new Date(viewYear, viewMonth, 1).getDay(); // 0=Sunday
+    const daysInMonth = new Date(viewYear, viewMonth+1, 0).getDate();
+    const totalCells = Math.ceil((firstWeekday + daysInMonth) / 7) * 7;
+
+    for(let i=0;i<totalCells;i++){
+      const dayNum = i - firstWeekday + 1;
+      const cell = document.createElement('div');
+      cell.className = 'day-cell';
+
+      if(dayNum < 1 || dayNum > daysInMonth){
+        cell.classList.add('empty');
+        grid.appendChild(cell);
+        continue;
+      }
+
+      const isToday = (viewYear===today.getFullYear() && viewMonth===today.getMonth() && dayNum===today.getDate());
+      if(isToday) cell.classList.add('today');
+
+      const num = document.createElement('span');
+      num.className = 'day-num';
+      num.textContent = dayNum;
+      cell.appendChild(num);
+
+      const dateStr = isoDate(viewYear, viewMonth, dayNum);
+      const dayEvents = eventsForDay(viewYear, viewMonth, dayNum);
+      const dayLogs = logsForDate(dateStr);
+      if(dayLogs.length) cell.classList.add('has-log');
+
+      const combinedCount = dayEvents.length + dayLogs.length;
+      if(combinedCount){
+        const mini = document.createElement('div');
+        mini.className = 'event-list-mini';
+
+        dayEvents.slice(0,2).forEach(ev=>{
+          const chip = document.createElement('div');
+          chip.className = 'event-chip';
+          chip.textContent = ev.title;
+          chip.title = ev.title;
+          mini.appendChild(chip);
+        });
+
+        const remainingSlots = Math.max(0, 2 - dayEvents.length);
+        dayLogs.slice(0, remainingSlots).forEach(l=>{
+          const chip = document.createElement('div');
+          chip.className = 'log-chip';
+          chip.textContent = l.note;
+          chip.title = `${LOG_TYPES[l.type]||''}: ${l.note}`;
+          mini.appendChild(chip);
+        });
+
+        const shown = Math.min(dayEvents.length,2) + Math.min(dayLogs.length, remainingSlots);
+        if(combinedCount > shown){
+          const more = document.createElement('div');
+          more.className = 'event-chip more';
+          more.textContent = `+${combinedCount-shown} أخرى`;
+          mini.appendChild(more);
+        }
+        cell.appendChild(mini);
+      }
+
+      cell.dataset.date = dateStr;
+      cell.addEventListener('click', ()=>{
+        openLogModal(dateStr);
+      });
+
+      grid.appendChild(cell);
+    }
+  }
+
+  // ---------------- Money helpers ----------------
+  function formatMoney(n){
+    const v = Math.round((Number(n)||0) * 100) / 100;
+    return v.toLocaleString('ar-EG', {maximumFractionDigits:2});
+  }
+
+  function todayStr(){
+    return isoDate(today.getFullYear(), today.getMonth(), today.getDate());
+  }
+
+  // ---------------- Today's transactions summary ----------------
+  function renderTodaySummary(){
+    document.getElementById('tx-today-date').textContent = formatDateLong(todayStr());
+
+    const entries = logsForDate(todayStr());
+    let inTotal = 0, outTotal = 0;
+    entries.forEach(l=>{
+      const amt = Number(l.amount) || 0;
+      if(l.direction === 'out') outTotal += amt; else inTotal += amt;
+    });
+    const net = inTotal - outTotal;
+
+    document.getElementById('tx-today-in').textContent = formatMoney(inTotal);
+    document.getElementById('tx-today-out').textContent = formatMoney(outTotal);
+
+    const netEl = document.getElementById('tx-today-net');
+    netEl.textContent = formatMoney(net);
+    netEl.classList.toggle('negative', net < 0);
+
+    document.getElementById('tx-today-count').textContent = entries.length
+      ? `${entries.length} حركة مسجلة اليوم`
+      : 'لا توجد حركات مسجلة اليوم';
+  }
+
+  // ---------------- Journal (دفتر اليومية) ----------------
+  function renderJournal(){
+    const list = document.getElementById('journal-list');
+    list.innerHTML = '';
+
+    let inTotal = 0, outTotal = 0;
+    dailyLogs.forEach(l=>{
+      const amt = Number(l.amount) || 0;
+      if(l.direction === 'out') outTotal += amt; else inTotal += amt;
+    });
+    const net = inTotal - outTotal;
+
+    document.getElementById('journal-in-total').textContent = formatMoney(inTotal);
+    document.getElementById('journal-out-total').textContent = formatMoney(outTotal);
+    const netEl = document.getElementById('journal-net-total');
+    netEl.textContent = formatMoney(net);
+    netEl.classList.toggle('negative', net < 0);
+    document.getElementById('journal-total-value').textContent = formatMoney(dailyLogs.length);
+
+    if(dailyLogs.length === 0){
+      const li = document.createElement('li');
+      li.className = 'empty-state';
+      li.textContent = 'لا توجد حركات مسجلة بعد';
+      list.appendChild(li);
+      renderTodaySummary();
+      return;
+    }
+
+    const sorted = dailyLogs.slice().sort((a,b)=>{
+      if(a.date !== b.date) return b.date.localeCompare(a.date);
+      return (b.time||'').localeCompare(a.time||'');
+    });
+
+    sorted.forEach(l=>{
+      const li = document.createElement('li');
+      const main = document.createElement('div'); main.className = 'jl-main';
+      const [y,m,d] = l.date.split('-');
+      const dateSpan = document.createElement('span'); dateSpan.className = 'jl-date';
+      dateSpan.textContent = `${d} ${MONTHS[parseInt(m,10)-1]}` + (l.time ? ' · ' + l.time : '');
+      const typeSpan = document.createElement('span'); typeSpan.className = 'jl-type';
+      typeSpan.textContent = (l.direction === 'out' ? 'صرف' : 'قبض') + ' — ' + (LOG_TYPES[l.type] || '');
+      const noteSpan = document.createElement('span'); noteSpan.className = 'jl-note'; noteSpan.textContent = l.note;
+      main.append(dateSpan,typeSpan,noteSpan);
+      const amt = Number(l.amount) || 0;
+      const amountSpan = document.createElement('span'); amountSpan.className = 'jl-amount' + (l.direction === 'out' ? ' negative' : '');
+      amountSpan.textContent = amt ? (l.direction === 'out' ? '-' : '+') + formatMoney(amt) : '—';
+      const actions = document.createElement('div'); actions.className = 'journal-actions';
+      const edit = document.createElement('button'); edit.className = 'edit-btn'; edit.textContent = '✎'; edit.title = 'تعديل الحركة'; edit.setAttribute('aria-label','تعديل الحركة');
+      edit.addEventListener('click', ()=> openEditLog(l.id));
+      const del = document.createElement('button'); del.className = 'del-btn'; del.textContent = '×'; del.title = 'حذف الحركة'; del.setAttribute('aria-label','حذف الحركة');
+      del.addEventListener('click', ()=> deleteLog(l.id));
+      actions.append(edit,del);
+      li.append(main,amountSpan,actions); list.appendChild(li);
+    });
+    renderTodaySummary();
+  }
+
+  function deleteLog(id){
+    if(!confirm('هل تريد حذف هذه الحركة؟')) return;
+    dailyLogs = dailyLogs.filter(x=>x.id !== id);
+    saveLogs(); renderJournal(); renderCalendar();
+    if(activeModalDate) renderLogEntries(activeModalDate);
+  }
+
+  // ---------------- Log modal ----------------
+  const modalOverlay = document.getElementById('log-modal-overlay');
+
+  function renderLogEntries(dateStr){
+    const list = document.getElementById('log-entries-list'); list.innerHTML = '';
+    const entries = logsForDate(dateStr);
+    if(entries.length === 0){
+      const li=document.createElement('li'); li.style.border='none'; li.style.background='transparent'; li.style.color='var(--ink-soft)'; li.style.justifyContent='center'; li.textContent='لا توجد حركات مسجلة لهذا اليوم بعد'; list.appendChild(li); return;
+    }
+    entries.forEach(l=>{
+      const li=document.createElement('li');
+      const body=document.createElement('div'); body.className='le-body';
+      const typeSpan=document.createElement('span'); typeSpan.className='le-type';
+      typeSpan.textContent=(l.direction==='out'?'صرف':'قبض')+' — '+(LOG_TYPES[l.type]||'ملاحظة');
+      if(l.time){const t=document.createElement('span');t.className='le-time';t.textContent=l.time;typeSpan.appendChild(t);}
+      const note=document.createElement('span'); note.className='le-note'; note.textContent=l.note;
+      if(Number(l.amount)){ const a=document.createElement('span'); a.style.cssText='display:block;font-weight:700;margin-top:3px;color:'+(l.direction==='out'?'var(--clay)':'var(--green-dark)'); a.textContent=(l.direction==='out'?'− ':'+ ')+formatMoney(l.amount); body.appendChild(a);}
+      body.append(typeSpan,note);
+      const actions=document.createElement('div'); actions.className='journal-actions';
+      const edit=document.createElement('button'); edit.className='edit-btn'; edit.textContent='✎'; edit.title='تعديل'; edit.setAttribute('aria-label','تعديل'); edit.addEventListener('click',()=>openEditLog(l.id));
+      const del=document.createElement('button'); del.className='del-btn'; del.textContent='×'; del.title='حذف'; del.setAttribute('aria-label','حذف'); del.addEventListener('click',()=>deleteLog(l.id));
+      actions.append(edit,del); li.append(body,actions); list.appendChild(li);
+    });
+  }
+
+  function resetLogForm(){
+    document.getElementById('log-form').reset();
+    document.getElementById('log-direction').value='in';
+    editingLogId=null; document.getElementById('log-form').classList.remove('is-editing');
+    document.getElementById('log-submit').textContent='تسجيل الحركة';
+  }
+  function openLogModal(dateStr){
+    activeModalDate=dateStr; resetLogForm();
+    document.getElementById('log-modal-date').firstChild.textContent=formatDateLong(dateStr)+' ';
+    renderLogEntries(dateStr); modalOverlay.classList.add('open');
+    setTimeout(()=>document.getElementById('log-note').focus(),50);
+  }
+  function openEditLog(id){
+    const l=dailyLogs.find(x=>x.id===id); if(!l) return;
+    activeModalDate=l.date; editingLogId=id;
+    document.getElementById('log-modal-date').firstChild.textContent=formatDateLong(l.date)+' ';
+    document.getElementById('log-type').value=l.type||'other';
+    document.getElementById('log-time').value=l.time||'';
+    document.getElementById('log-direction').value=l.direction||'in';
+    document.getElementById('log-amount').value=Number(l.amount)||'';
+    document.getElementById('log-note').value=l.note||'';
+    document.getElementById('log-form').classList.add('is-editing');
+    document.getElementById('log-submit').textContent='حفظ التعديل';
+    renderLogEntries(l.date); modalOverlay.classList.add('open');
+    setTimeout(()=>document.getElementById('log-note').focus(),50);
+  }
+  function closeLogModal(){ modalOverlay.classList.remove('open'); activeModalDate=null; editingLogId=null; document.getElementById('log-form').classList.remove('is-editing'); }
+
+  document.getElementById('log-modal-close').addEventListener('click',closeLogModal);
+  document.getElementById('log-cancel-edit').addEventListener('click',()=>{ resetLogForm(); renderLogEntries(activeModalDate); });
+  modalOverlay.addEventListener('click',e=>{if(e.target===modalOverlay)closeLogModal();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modalOverlay.classList.contains('open'))closeLogModal();});
+
+  document.getElementById('log-form').addEventListener('submit',function(e){
+    e.preventDefault(); if(!activeModalDate)return;
+    const type=document.getElementById('log-type').value, time=document.getElementById('log-time').value, note=document.getElementById('log-note').value.trim();
+    const direction=document.getElementById('log-direction').value, amountRaw=document.getElementById('log-amount').value, amount=amountRaw?Math.abs(parseFloat(amountRaw)):0;
+    if(!note)return;
+    if(editingLogId){
+      const item=dailyLogs.find(x=>x.id===editingLogId);
+      if(item){item.type=type;item.time=time;item.note=note;item.amount=amount;item.direction=direction;}
+      saveLogs(); renderLogEntries(activeModalDate); renderCalendar(); renderJournal(); resetLogForm();
+    }else{
+      dailyLogs.push({id:'l'+Date.now(),date:activeModalDate,type,time,note,amount,direction});
+      saveLogs(); renderLogEntries(activeModalDate); renderCalendar(); renderJournal(); resetLogForm();
+      document.getElementById('log-note').focus();
+    }
+  });
+
+  document.getElementById('tx-add-today-btn').addEventListener('click', ()=>{
+    openLogModal(todayStr());
+  });
+
+  // ---------------- Search ----------------
+  const searchBox = document.getElementById('search-box');
+  const searchResults = document.getElementById('search-results');
+
+  function buildSearchIndex(){
+    const idx = [];
+    events.forEach(ev=>{
+      idx.push({
+        kind:'event',
+        date: ev.date,
+        sortDate: ev.date,
+        label: ev.title + (ev.recurring ? ' (سنوي)' : ''),
+        raw: ev
+      });
+    });
+    dailyLogs.forEach(l=>{
+      idx.push({
+        kind:'log',
+        date: l.date,
+        sortDate: l.date,
+        label: `${LOG_TYPES[l.type]||''} — ${l.note}`,
+        raw: l
+      });
+    });
+    return idx;
+  }
+
+  function runSearch(query){
+    const q = query.trim();
+    searchResults.innerHTML = '';
+    if(!q){ searchResults.classList.remove('open'); return; }
+
+    const idx = buildSearchIndex();
+    const qLower = q.toLowerCase();
+    const matches = idx.filter(item=>{
+      if(item.label.toLowerCase().includes(qLower)) return true;
+      if(item.date.includes(q)) return true;
+      const monthName = MONTHS[parseInt(item.date.slice(5,7),10)-1];
+      if(monthName && monthName.includes(q)) return true;
+      return false;
+    }).sort((a,b)=> a.sortDate.localeCompare(b.sortDate));
+
+    if(matches.length === 0){
+      const empty = document.createElement('div');
+      empty.className = 'sr-empty';
+      empty.textContent = 'لا توجد نتائج مطابقة';
+      searchResults.appendChild(empty);
+      searchResults.classList.add('open');
+      return;
+    }
+
+    matches.slice(0,30).forEach(item=>{
+      const row = document.createElement('div');
+      row.className = 'sr-item';
+
+      const dateSpan = document.createElement('span');
+      dateSpan.className = 'sr-date';
+      dateSpan.textContent = formatDateLong(item.date).replace(/\s\d{4}$/, '');
+
+      const badge = document.createElement('span');
+      badge.className = 'sr-badge ' + (item.kind === 'event' ? 'ev' : 'log');
+      badge.textContent = item.kind === 'event' ? 'مناسبة' : 'حركة';
+
+      const text = document.createElement('span');
+      text.className = 'sr-text';
+      text.textContent = item.label;
+
+      row.appendChild(dateSpan);
+      row.appendChild(badge);
+      row.appendChild(text);
+
+      row.addEventListener('click', ()=>{
+        const [y,m,d] = item.date.split('-').map(n=>parseInt(n,10));
+        viewYear = y; viewMonth = m-1;
+        renderCalendar();
+        searchResults.classList.remove('open');
+        searchBox.value = '';
+        if(item.kind === 'log'){
+          openLogModal(item.date);
+        } else {
+          setTimeout(()=>{
+            const cell = document.querySelector(`.day-cell[data-date="${item.date}"]`);
+            if(cell){
+              cell.classList.add('flash');
+              cell.scrollIntoView({behavior:'smooth', block:'center'});
+              setTimeout(()=>cell.classList.remove('flash'), 1200);
+            }
+          }, 60);
+        }
+      });
+
+      searchResults.appendChild(row);
+    });
+    searchResults.classList.add('open');
+  }
+
+  searchBox.addEventListener('input', ()=> runSearch(searchBox.value));
+  searchBox.addEventListener('focus', ()=>{ if(searchBox.value.trim()) runSearch(searchBox.value); });
+  document.addEventListener('click', (e)=>{
+    if(!e.target.closest('.search-row')) searchResults.classList.remove('open');
+  });
+
+  document.getElementById('month-prev').addEventListener('click', ()=>{
+    viewMonth--; if(viewMonth<0){viewMonth=11; viewYear--;}
+    renderCalendar();
+  });
+  document.getElementById('month-next').addEventListener('click', ()=>{
+    viewMonth++; if(viewMonth>11){viewMonth=0; viewYear++;}
+    renderCalendar();
+  });
+  document.getElementById('year-prev').addEventListener('click', ()=>{
+    viewYear--; renderCalendar();
+  });
+  document.getElementById('year-next').addEventListener('click', ()=>{
+    viewYear++; renderCalendar();
+  });
+  document.getElementById('today-btn').addEventListener('click', ()=>{
+    viewYear = today.getFullYear();
+    viewMonth = today.getMonth();
+    renderCalendar();
+  });
+
+  renderCalendar();
+  renderJournal();
+  initCloud();
+})();
+</script>
+</body>
+</html>
